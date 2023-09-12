@@ -1,5 +1,5 @@
 function createHeaderBox() {
-    const header = document.createElement('div');
+    const header = document.createElement('header');
     header.id = 'header';
     const title = document.createElement('h1');
     title.textContent = 'Battleship';
