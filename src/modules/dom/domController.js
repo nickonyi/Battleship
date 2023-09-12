@@ -30,8 +30,6 @@ function newGame() {
     const player1 = game.createPlayer('Player 1', 1);
     const player2 = game.createPlayer(false, 2);
     drawSetup(player1);
-    //const dev = drawBoardContainer(player1);
-    //gameContainer.appendChild(dev);
 }
 
 function clearContainer(container) {
@@ -43,7 +41,8 @@ function clearContainer(container) {
 function drawSetup(player) {
     clearContainer(gameContainer);
     const setupBoard = setup.drawSetupBoard(player, drawBoardContainer(player));
-    gameContainer.appendChild(setupBoard);
+    const setupShips = setup.drawSetupShips();
+    gameContainer.append(setupBoard, setupShips);
 }
 
 function drawBoardContainer(player) {
@@ -56,7 +55,7 @@ function drawBoardContainer(player) {
         playerName.textContent = `Your fleet`;
     }
     const playerBoard = drawBoard(player);
-    console.log(playerBoard);
+
     boardContainer.append(playerName, playerBoard);
     return boardContainer;
 }
