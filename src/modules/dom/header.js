@@ -12,9 +12,14 @@ function createHeaderBox() {
     howToPlayButton.classList.add('play-button');
     howToPlayButton.textContent = "How to play";
 
+    const btnContainer = document.createElement('div');
+    btnContainer.classList.add('btn-container');
+    btnContainer.appendChild(newGameButton);
+    btnContainer.appendChild(howToPlayButton);
+
     header.appendChild(title);
-    header.appendChild(newGameButton);
-    header.appendChild(howToPlayButton)
+    header.appendChild(btnContainer);
+
 
     return header;
 }
