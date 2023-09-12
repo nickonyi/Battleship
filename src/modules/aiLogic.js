@@ -1,5 +1,5 @@
-function sum(a,b){
-    return a+b;
+function aiLogic() {
+
 }
 
-export default sum;
+export default aiLogic;
