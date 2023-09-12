@@ -103,10 +103,13 @@ button:active {
 
 #game-container {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-content: center;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 100px;
+    margin-block: 50px;
+    width: 676px;
+    padding-left: 0;
 }
 
 .board-container {
