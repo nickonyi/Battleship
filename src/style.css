@@ -106,10 +106,43 @@ button:active {
     justify-content: start;
     align-content: center;
     flex-wrap: wrap;
-    gap: 100px;
+    gap: 40px;
     margin-block: 50px;
     width: 676px;
-    padding-left: 0;
+}
+
+
+/* player setup */
+
+.setup-ships-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: var(--board-size);
+    height: calc(var(--board-size)+ 25px);
+    text-align: right;
+}
+
+.setup-ships-header p {
+    margin: 0;
+    font-size: .8rem;
+}
+
+.setup-ships-list {
+    display: flex;
+}
+
+.setup-ship {
+    height: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.setup-ship p {
+    margin: 0;
+    display: inline-block;
 }
 
 .board-container {
