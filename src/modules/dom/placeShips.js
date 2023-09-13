@@ -30,12 +30,38 @@ function drawSetupShips() {
     //randomShips.addEventListener('click', randomizeShips);
     setupShipsOptions.append(startGameBtn, randomShips);
     const shipList = document.createElement('div');
-
+    for (const ship in shipTypes) {
+        shipList.append(drawShip(shipTypes[ship]));
+    }
 
     setupShipsHeader.append(setupShipsTitle, setupShipsInfo);
     setupShipsContainer.append(setupShipsHeader, shipList, setupShipsOptions);
 
     return setupShipsContainer;
+}
+
+function drawShip(ship) {
+    const shipContainer = document.createElement('div');
+    shipContainer.classList.add('setup-ship-container');
+    shipContainer.id = `${ship.name}-home`;
+    const shipBox = document.createElement('div');
+    shipBox.id = ship.name;
+    shipBox.dataset.length = ship.length;
+    shipBox.classList.add('setup-ship-box');
+    for (let i = 0; i < ship.length; i++) {
+        const shipCell = document.createElement('div');
+        shipCell.classList.add('setup-ship-cell');
+        shipBox.append(shipCell);
+    }
+
+    const shipName = document.createElement('p');
+    if (ship.name === 'patrol') {
+        shipName.textContent = 'Patrol Boat';
+    } else {
+        shipName.textContent = ship.name;
+    }
+    shipContainer.append(shipBox, shipName);
+    return shipContainer;
 }
 
 const setup = {
