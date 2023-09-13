@@ -30,6 +30,7 @@ function drawSetupShips() {
     //randomShips.addEventListener('click', randomizeShips);
     setupShipsOptions.append(startGameBtn, randomShips);
     const shipList = document.createElement('div');
+    shipList.classList.add('setup-ship-list');
     for (const ship in shipTypes) {
         shipList.append(drawShip(shipTypes[ship]));
     }
@@ -42,7 +43,7 @@ function drawSetupShips() {
 
 function drawShip(ship) {
     const shipContainer = document.createElement('div');
-    shipContainer.classList.add('setup-ship-container');
+    shipContainer.classList.add('setup-ship');
     shipContainer.id = `${ship.name}-home`;
     const shipBox = document.createElement('div');
     shipBox.id = ship.name;
