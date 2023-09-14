@@ -132,17 +132,72 @@ button:active {
     display: flex;
 }
 
+.setup-ship-vertical {
+    flex-direction: column;
+}
+
+.setup-ship-hide div {
+    background-color: rgba(0, 0, 0, 0);
+    opacity: 0.5;
+}
+
 .setup-ship {
     height: 40px;
     position: relative;
     display: flex;
     flex-direction: row-reverse;
+    justify-content: space-between;
     align-items: center;
 }
 
 .setup-ship p {
     margin: 0;
     display: inline-block;
+}
+
+.setup-ship-box {
+    cursor: grab;
+    display: inline-flex;
+    gap: 2px;
+    position: relative;
+    z-index: 20;
+}
+
+.setup-ship-cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: var(--cell-hover-color);
+    border: 1px solid var(--cell-border-color);
+}
+
+.setup-ships-options {
+    display: flex;
+    justify-content: space-between;
+}
+
+.setup-button-start,
+.setup-button-random {
+    width: 120px;
+    height: 36px;
+}
+
+.setup-button-start {
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: var(--hit-color);
+    transition: transform 0.1s ease;
+}
+
+.setup-button-start-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@media (hover: hover) {
+    .setup-button-start:hover {
+        transform: scale(1.1);
+        background-color: rgb(226, 116, 116);
+    }
 }
 
 .board-container {
