@@ -225,3 +225,18 @@ button:active {
     height: var(--cell-size);
     width: var(--cell-size);
 }
+
+.cell-drag-over {
+    pointer-events: none;
+    position: absolute;
+    display: inline-block;
+    z-index: 40;
+}
+
+.cell-drag-valid {
+    background-color: var(--miss-color);
+}
+
+.cell-drag-invalid {
+    background-color: var(--hit-color);
+}

@@ -99,18 +99,35 @@ function dragEnter(event, touchCell) {
     let row;
     let col;
     //4.Depending on weather the current event is touch move or not we calculate the row and col values
-    //adjusting the difference between the origanl touch point and the cell
-    if (event.type === 'touchmove') {
+    //adjusting the difference between the origanl touch point and the cell origin
+    if (event.type === "touchmove") {
         row = parseInt(touchCell.dataset.row) - parseInt(dragData.rowDif);
         col = parseInt(touchCell.dataset.col) - parseInt(dragData.colDif);
     } else {
         row = parseInt(event.target.dataset.row) - parseInt(dragData.rowDif);
         col = parseInt(event.target.dataset.col) - parseInt(dragData.colDif);
     }
+
     //5. check weather is valid to place the ship in the given position on the board
-    const shipSquares = player.gameBoard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
+    const shipSquares = player.gameboard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
+    //console.log(shipSquares);
     //6.filter invalid squares
-    //7.For each valid square create a visual overlay
+    //shipSquares.squares = shipSquares.squares.filter(square => {
+    //    return player.gameBoard.checkSquare(square[0], square[1] != undefined);
+    //});
+    ////7.For each valid square create a visual overlay
+    //shipSquares.square.forEach(square => {
+    //    const cell = board.querySelector(`[data-row='${square[0]}'][data-col='${square[1]}']`);
+    //    const cellOverLay = document.createElement('div');
+    //    cellOverLay.classList.add('cell', 'cell-drag-over');
+    //    cell.appendChild(cellOverLay);
+    //
+    //    if (shipSquares.isValid) {
+    //        cellOverLay.classList.add('cell-drag-valid');
+    //    } else {
+    //        cellOverLay.classList.add('cell-drag-invalid');
+    //    }
+    //});
 }
 
 function dragLeave(event) {
