@@ -88,54 +88,6 @@ function drawShip(ship) {
     return shipContainer;
 }
 
-//This function handles the drag event when a user interacts with a particular ship element and enters a game cell into the board
-function dragEnter(event, touchCell) {
-    //1.clean up- removes any visual effects from with the previous drag operation
-    dragLeave(event);
-    //2.Prevent default behaviour of the drag operation
-    event.preventDefault();
-    //3.Extract data from the currently draagged ship and store it in the type variable
-    const type = dragData.shipElement.id;
-    let row;
-    let col;
-    //4.Depending on weather the current event is touch move or not we calculate the row and col values
-    //adjusting the difference between the origanl touch point and the cell origin
-    if (event.type === "touchmove") {
-        row = parseInt(touchCell.dataset.row) - parseInt(dragData.rowDif);
-        col = parseInt(touchCell.dataset.col) - parseInt(dragData.colDif);
-    } else {
-        row = parseInt(event.target.dataset.row) - parseInt(dragData.rowDif);
-        col = parseInt(event.target.dataset.col) - parseInt(dragData.colDif);
-    }
-
-    //5. check weather is valid to place the ship in the given position on the board
-    const shipSquares = player.gameboard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
-    //console.log(shipSquares);
-    //6.filter invalid squares
-    //shipSquares.squares = shipSquares.squares.filter(square => {
-    //    return player.gameBoard.checkSquare(square[0], square[1] != undefined);
-    //});
-    ////7.For each valid square create a visual overlay
-    //shipSquares.square.forEach(square => {
-    //    const cell = board.querySelector(`[data-row='${square[0]}'][data-col='${square[1]}']`);
-    //    const cellOverLay = document.createElement('div');
-    //    cellOverLay.classList.add('cell', 'cell-drag-over');
-    //    cell.appendChild(cellOverLay);
-    //
-    //    if (shipSquares.isValid) {
-    //        cellOverLay.classList.add('cell-drag-valid');
-    //    } else {
-    //        cellOverLay.classList.add('cell-drag-invalid');
-    //    }
-    //});
-}
-
-function dragLeave(event) {
-    const leftCells = document.querySelectorAll('.cell-drag-over');
-    leftCells.forEach(cell => {
-        cell.remove();
-    });
-}
 
 // When the user starts dragging a ship, we store its information in dragData
 function dragStart(event) {
@@ -200,6 +152,59 @@ function updateCellDiff(event) {
         dragData.colDif = 0;
     }
 }
+
+//This function handles the drag event when a user interacts with a particular ship element and enters a game cell into the board
+function dragEnter(event, touchCell) {
+    //1.clean up- removes any visual effects from with the previous drag operation
+    dragLeave(event);
+    //2.Prevent default behaviour of the drag operation
+    event.preventDefault();
+    //3.Extract data from the currently draagged ship and store it in the type variable
+    const type = dragData.shipElement.id;
+    let row;
+    let col;
+    //4.Depending on weather the current event is touch move or not we calculate the row and col values
+    //adjusting the difference between the origanl touch point and the cell origin
+    if (event.type === "touchmove") {
+        row = parseInt(touchCell.dataset.row) - parseInt(dragData.rowDif);
+        col = parseInt(touchCell.dataset.col) - parseInt(dragData.colDif);
+    } else {
+        row = parseInt(event.target.dataset.row) - parseInt(dragData.rowDif);
+        col = parseInt(event.target.dataset.col) - parseInt(dragData.colDif);
+    }
+
+    //5. check weather is valid to place the ship in the given position on the board
+    const shipSquares = player.gameBoard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
+    
+    //6.filter invalid squares
+    shipSquares.squares = shipSquares.squares.filter(square => {
+        return player.gameBoard.checkSquare(square[0], square[1]) !== undefined;
+    });
+  
+    
+    //7.For each valid square create a visual overlay
+    shipSquares.squares.forEach(square => {
+        const cell = board.querySelector(`[data-row='${square[0]}'][data-col='${square[1]}']`);
+        
+        const cellOverLay = document.createElement('div');
+        cellOverLay.classList.add('cell', 'cell-drag-over');
+        cell.appendChild(cellOverLay);
+    
+        if (shipSquares.isValid) {
+            cellOverLay.classList.add('cell-drag-valid');
+        } else {
+            cellOverLay.classList.add('cell-drag-invalid');
+        }
+    });
+}
+
+function dragLeave(event) {
+    const leftCells = document.querySelectorAll('.cell-drag-over');
+    leftCells.forEach(cell => {
+        cell.remove();
+    });
+}
+
 const setup = {
     drawSetupBoard,
     drawSetupShips
