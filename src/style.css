@@ -175,6 +175,12 @@ button:active {
     justify-content: space-between;
 }
 
+.setup-ship-dropped {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+}
+
 .setup-button-start,
 .setup-button-random {
     width: 120px;

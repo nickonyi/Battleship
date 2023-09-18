@@ -25,6 +25,9 @@ function drawSetupBoard(setupPlayer, setupBoard) {
 
     setUpCells.forEach(cell => {
         cell.addEventListener('dragenter', dragEnter);
+        cell.addEventListener('dragover', dragOver);
+        cell.addEventListener('dragleave', dragLeave);
+        cell.addEventListener('drop', drop);
     });
     return setupBoard;
 }
@@ -175,27 +178,31 @@ function dragEnter(event, touchCell) {
 
     //5. check weather is valid to place the ship in the given position on the board
     const shipSquares = player.gameBoard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
-    
+
     //6.filter invalid squares
     shipSquares.squares = shipSquares.squares.filter(square => {
         return player.gameBoard.checkSquare(square[0], square[1]) !== undefined;
     });
-  
-    
+
+
     //7.For each valid square create a visual overlay
     shipSquares.squares.forEach(square => {
         const cell = board.querySelector(`[data-row='${square[0]}'][data-col='${square[1]}']`);
-        
+
         const cellOverLay = document.createElement('div');
         cellOverLay.classList.add('cell', 'cell-drag-over');
         cell.appendChild(cellOverLay);
-    
+
         if (shipSquares.isValid) {
             cellOverLay.classList.add('cell-drag-valid');
         } else {
             cellOverLay.classList.add('cell-drag-invalid');
         }
     });
+}
+
+function dragOver(event) {
+    event.preventDefault();
 }
 
 function dragLeave(event) {
@@ -205,6 +212,29 @@ function dragLeave(event) {
     });
 }
 
+function drop(event, touchCell) {
+    dragLeave(event);
+    let row;
+    let col;
+    const type = dragData.shipElement.id;
+    if (event.type === "touchend") {
+        row = parseInt(touchCell.dataset.row) - parseInt(dragData.rowDif);
+        col = parseInt(touchCell.dataset.col) - parseInt(dragData.colDif);
+    } else {
+        row = parseInt(event.target.dataset.row) - parseInt(dragData.rowDif);
+        col = parseInt(event.target.dataset.col) - parseInt(dragData.colDif);
+    }
+
+    const shipSquares = player.gameBoard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
+
+    if (shipSquares.isValid) {
+        const originCell = board.querySelector(`[data-row='${row}'][data-col='${col}']`);
+        originCell.appendChild(dragData.shipElement);
+        dragData.shipElement.classList.add('setup-ship-dropped');
+        dragData.previousContainer = originCell;
+        player.gameBoard.placeShip(dragData.shipElement.id, [row, col], dragData.shipElement.dataset.alignment);
+    }
+}
 const setup = {
     drawSetupBoard,
     drawSetupShips

@@ -4,10 +4,8 @@ const path = require('path');
 module.exports = {
     mode: "development",
     devServer: {
-        static: "./dist",    
+        static: "./dist",
         allowedHosts: ['.ngrok-free.app'],
-            // Other devServer options...
-    
     },
     entry: './src/index.js',
     devtool: 'inline-source-map',
