@@ -21,7 +21,7 @@ function GameBoard() {
     function checkSquare(row, col) {
         if (row < 0 || col < 0) return undefined;
         if (row > 9 || col > 9) return undefined;
-        else return board[row][col];
+        else return this.board[row][col];
     }
 
     //check weather is valid to place a ship of a given length on a gameboard at a specified origin with a specifed alignmnent 
@@ -65,30 +65,40 @@ function GameBoard() {
 
 
     function placeShip(shipType, origin, alignment) {
-        const shipLength = shipTypes[shipType].shipLength;
+        const shipLength = shipTypes[shipType].length;
         const shipSquares = this.checkValidPlacement(shipLength, origin, alignment);
 
         if (shipSquares.isValid) {
+
             const ship = Ship(shipType);
             ship.squares = shipSquares.squares
+            ship.alignment = alignment;
+
 
             shipSquares.squares.forEach(square => {
-                //let [row, col] = square;
-                //console.log(this.board[row][col] = ship);
-                console.log(square);
-            })
+                let [row, col] = square;
+                this.board[row][col] = ship;
+            });
+
+            placedShips.push(ship);
+            return ship;
+        } else {
+            return "Cannot place ship in that area";
         }
     }
 
     function removeShip(origin) {
         const [row, col] = origin;
+        console.log(origin);
         const ship = this.checkSquare(row, col);
+        console.log(ship);
         ship.squares.forEach(square => {
             const [row, col] = square;
             this.board[row][col] = null;
         });
-        const placedShipIndex = this.placedShips.indexOf(ship);
-        this.placedShips.splice(placedShipIndex, 1);
+        console.log(placedShips);
+        const placedShipIndex = placedShips.indexOf(ship);
+        placedShips.splice(placedShipIndex, 1);
     }
 
 

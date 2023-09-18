@@ -94,7 +94,6 @@ function drawShip(ship) {
 
 // When the user starts dragging a ship, we store its information in dragData
 function dragStart(event) {
-
     if (event.type === "touchstart") {
         dragData.shipElement = event.target.parentElement;
         dragData.shipHomeContainer = document.querySelector(`#${event.target.parentElement.id}-home`);
@@ -120,7 +119,7 @@ function dragStart(event) {
         const cell = dragData.previousContainer;
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
-
+        console.log([row, col]);
         player.gameBoard.removeShip([row, col]);
     }
 }
@@ -226,13 +225,25 @@ function drop(event, touchCell) {
     }
 
     const shipSquares = player.gameBoard.checkValidPlacement(shipTypes[type].length, [row, col], dragData.shipElement.dataset.alignment);
-
+    //If the drop is a valid location, place the ship on the player 's gameboard and append it to the setup board
     if (shipSquares.isValid) {
         const originCell = board.querySelector(`[data-row='${row}'][data-col='${col}']`);
         originCell.appendChild(dragData.shipElement);
         dragData.shipElement.classList.add('setup-ship-dropped');
         dragData.previousContainer = originCell;
-        player.gameBoard.placeShip(dragData.shipElement.id, [row, col], dragData.shipElement.dataset.alignment);
+        const donda = player.gameBoard.placeShip(dragData.shipElement.id, [row, col], dragData.shipElement.dataset.alignment);
+        console.log(donda);
+    }
+    // Else, move the ship back to its previous location
+    // If that location is a cell, place the ship back on the player's gameboard in the previous location
+    else {
+        if (dragData.previousContainer.classList.contains('cell')) {
+            dragData.shipElement.classList.add('setup-ship-dropped');
+            let prevRow = dragData.previousContainer.dataset.row;
+            let prevCol = dragData.previousContainer.dataset.col;
+            player.gameBoard.placeShip(dragData.shipElement.id, [prevRow, prevCol], dragData.shipElement.dataset.alignment);
+            console.log(player.gameBoard.board);
+        }
     }
 }
 const setup = {
