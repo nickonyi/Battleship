@@ -128,6 +128,12 @@ function dragStart(event) {
 function dragEnd(event) {
     dragData.shipElement.classList.remove('setup-ship-hide');
 }
+
+//place all ships randomly on the players gameboard
+//Append each ship element to the placed ship's origin
+function randomizeFleet() {
+
+}
 // When a user grabs a ship element, we track the user's cursor location for the dragEnter and drop events
 // When the ship is grabbed from the center, the cursor does not match up with the ship's origin cell
 // The cellDif difference between the origin cell to the cell where the user has grabbed the ship element
@@ -166,6 +172,58 @@ function rotateShip(event) {
     const originRow = parseInt(originCell.dataset.row);
     const originCol = parseInt(originCell.dataset.col);
     player.gameBoard.removeShip([originRow, originCol]);
+
+    let row = originRow;
+    let col = originCol;
+    let originAlignment = shipElement.dataset.alignment;
+    let newAlignment;
+
+    //if rotation causes the ship to be off the grid,change the origin cell to allow its length
+    if (originAlignment === "horizontal") {
+        newAlignment = "vertical";
+        if ((10 - row) < shipLength) {
+            row = 10 - shipLength;
+        }
+    } else {
+        newAlignment = "horizontal";
+        if ((10 - col) < shipLength) {
+            col = 10 - shipElement;
+        }
+    }
+
+    //attempt to place the ship along the row(if horizontal) or column(if vertical)
+    //attempt this 10 times for each row or column, iterating through the grid
+    let attempts = 0;
+    let shipSquares = player.gameBoard.checkValidPlacement(shipLength, [row, col], newAlignment);
+    while (shipSquares.isValid === false && attempts < 10) {
+        if (newAlignment === "horizontal") {
+            row = row < 9 ? row + 1 : 0;
+        } else {
+            col = col < 9 ? col + 1 : 0;
+        }
+
+        shipSquares = player.gameBoard.checkValidPlacement(shipLength, [row, col], newAlignment);
+        attempts++;
+    }
+    //if a valid placement is found place the ship on both the players gameboard and the setup board
+
+    if (shipSquares.isValid) {
+        player.gameBoard.placeShip(shipElement.id, [row, col], newAlignment);
+        const newOrigincell = board.querySelector(`[data-row='${row}'][data-col='${col}']`);
+        newOrigincell.appendChild(shipElement);
+        shipElement.dataset.alignment = newAlignment;
+        if (newAlignment === "vertical") {
+            shipElement.classList.add('setup-ship-vertical');
+        } else {
+            shipElement.classList.remove('setup-ship-vertical');
+        }
+    }
+    //place the ship back to the players gameboard
+    else {
+        player.gameBoard.placeShip(shipLength, [row, col], originAlignment);
+    }
+
+
 }
 
 //This function handles the drag event when a user interacts with a particular ship element and enters a game cell into the board
