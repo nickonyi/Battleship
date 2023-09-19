@@ -89,14 +89,12 @@ function GameBoard() {
 
     function removeShip(origin) {
         const [row, col] = origin;
-        console.log(origin);
         const ship = this.checkSquare(row, col);
-        console.log(ship);
         ship.squares.forEach(square => {
             const [row, col] = square;
             this.board[row][col] = null;
         });
-        console.log(placedShips);
+
         const placedShipIndex = placedShips.indexOf(ship);
         placedShips.splice(placedShipIndex, 1);
     }

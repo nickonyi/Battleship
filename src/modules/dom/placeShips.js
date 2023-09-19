@@ -80,6 +80,7 @@ function drawShip(ship) {
     shipBox.dataset.alignment = 'horizontal';
     shipBox.addEventListener('dragstart', dragStart);
     shipBox.addEventListener('dragend', dragEnd);
+    shipBox.addEventListener('dblclick', rotateShip);
 
     const shipName = document.createElement('p');
     if (ship.name === 'patrol') {
@@ -119,7 +120,7 @@ function dragStart(event) {
         const cell = dragData.previousContainer;
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);
-        console.log([row, col]);
+
         player.gameBoard.removeShip([row, col]);
     }
 }
@@ -153,6 +154,18 @@ function updateCellDiff(event) {
         dragData.rowDif = Math.floor(y / (cellSize + 2));
         dragData.colDif = 0;
     }
+}
+
+//Handle the logic for rotating a placed ship
+function rotateShip(event) {
+    const shipElement = dragData.shipElement;
+    const shipLength = shipTypes[shipElement.id].length;
+    const originCell = shipElement.parentElement;
+    //if ship is not placed in the board return
+    if (!originCell.classList.contains('cell')) return;
+    const originRow = parseInt(originCell.dataset.row);
+    const originCol = parseInt(originCell.dataset.col);
+    player.gameBoard.removeShip([originRow, originCol]);
 }
 
 //This function handles the drag event when a user interacts with a particular ship element and enters a game cell into the board
@@ -231,8 +244,8 @@ function drop(event, touchCell) {
         originCell.appendChild(dragData.shipElement);
         dragData.shipElement.classList.add('setup-ship-dropped');
         dragData.previousContainer = originCell;
-        const donda = player.gameBoard.placeShip(dragData.shipElement.id, [row, col], dragData.shipElement.dataset.alignment);
-        console.log(donda);
+        player.gameBoard.placeShip(dragData.shipElement.id, [row, col], dragData.shipElement.dataset.alignment);
+
     }
     // Else, move the ship back to its previous location
     // If that location is a cell, place the ship back on the player's gameboard in the previous location
@@ -242,9 +255,13 @@ function drop(event, touchCell) {
             let prevRow = dragData.previousContainer.dataset.row;
             let prevCol = dragData.previousContainer.dataset.col;
             player.gameBoard.placeShip(dragData.shipElement.id, [prevRow, prevCol], dragData.shipElement.dataset.alignment);
-            console.log(player.gameBoard.board);
         }
+        dragData.previousContainer.appendChild(dragData.shipElement);
     }
+    dragData.shipElement.classList.remove('setup-ship-hide');
+    if (dragData.shipElement.dataset.alignment === 'vertical') {
+        dragData.shipElement.classList.add('setup-ship-vertical')
+    } else { dragData.shipElement.classList.remove('setup-ship-vertical') };
 }
 const setup = {
     drawSetupBoard,
