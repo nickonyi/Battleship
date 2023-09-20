@@ -32,44 +32,6 @@ function GameBoard() {
         }
     }
 
-    //take a ship and determine  a random origin and alignment
-    //keep placing ships until a valid location is found
-    function placeShipRandomly(shipType) {
-        const shipLength = shipTypes[shipType].length;
-
-        function getRandomAlignment() {
-            return Math.random() < 0.5 ? 'horizontal' : 'vertical';
-        }
-
-        function getRandomOrigin(alignment) {
-            let rowDif = 0;
-            let colDif = 0;
-
-            if (alignment === "vertical") {
-                rowDif = shipLength - 1;
-            } else {
-                colDif = shipLength - 1;
-            }
-
-            let row = Math.floor(Math.random() * (10 - rowDif));
-            let col = Math.floor(Math.random() * (10 - colDif));
-
-            return [row, col];
-        }
-
-        let alignment = getRandomAlignment();
-        let origin = getRandomOrigin();
-        let shipSquares = this.checkValidPlacement(shipLength, origin, alignment);
-
-        while (!shipSquares.isValid) {
-            alignment = getRandomAlignment();
-            origin = getRandomOrigin();
-            shipSquares = this.checkValidPlacement(shipLength, alignment, origin);
-        }
-        return this.placeShip(shipType, origin, alignment);
-    }
-
-
     function checkSquare(row, col) {
         if (row < 0 || col < 0) return undefined;
         if (row > 9 || col > 9) return undefined;
@@ -153,11 +115,54 @@ function GameBoard() {
 
     function placeAllShipsRandomly() {
         clearBoard(this.board);
-        clearFleet(this.placedShips);
+        clearFleet(placedShips);
         for (const ship in shipTypes) {
+            
             let result = this.placeShipRandomly(ship);
+            
+            while(typeof result !== 'object' || result == null){
+                result = this.placeAllShipsRandomly(ship);
+            }
         }
     }
+
+    //take a ship and determine  a random origin and alignment
+    //keep placing ships until a valid location is found
+    function placeShipRandomly(shipType) {
+        const shipLength = shipTypes[shipType].length;
+
+        function getRandomAlignment() {
+            return Math.random() < 0.5 ? 'horizontal' : 'vertical';
+        }
+
+        function getRandomOrigin(alignment) {
+            let rowDif = 0;
+            let colDif = 0;
+
+            if (alignment === "vertical") {
+                rowDif = shipLength - 1;
+            } else {
+                colDif = shipLength - 1;
+            }
+
+            let row = Math.floor(Math.random() * (10 - rowDif));
+            let col = Math.floor(Math.random() * (10 - colDif));
+
+            return [row, col];
+        }
+
+        let alignment = getRandomAlignment();
+        let origin = getRandomOrigin();
+        let shipSquares = this.checkValidPlacement(shipLength, origin, alignment);
+
+        while (!shipSquares.isValid) {
+            alignment = getRandomAlignment();
+            origin = getRandomOrigin();
+            shipSquares = this.checkValidPlacement(shipLength,origin,alignment);
+        }
+        return this.placeShip(shipType, origin, alignment);
+    }
+
 
 
 
@@ -167,7 +172,10 @@ function GameBoard() {
         removeShip,
         checkValidPlacement,
         checkSquare,
-        placeShip
+        placedShips,
+        placeShip,
+        placeAllShipsRandomly,
+        placeShipRandomly
     }
 }
 

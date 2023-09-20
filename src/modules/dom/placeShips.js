@@ -49,7 +49,7 @@ function drawSetupShips() {
     const randomShips = document.createElement('button');
     randomShips.classList.add('setup-button-random');
     randomShips.textContent = 'Randomize';
-    //randomShips.addEventListener('click', randomizeShips);
+    randomShips.addEventListener('click', randomizeFleet);
     setupShipsOptions.append(startGameBtn, randomShips);
     const shipList = document.createElement('div');
     shipList.classList.add('setup-ship-list');
@@ -82,12 +82,63 @@ function drawShip(ship) {
     shipBox.addEventListener('dragend', dragEnd);
     shipBox.addEventListener('dblclick', rotateShip);
 
+    shipBox.addEventListener('touchmove', function (event) {
+        const x = event.touches[0].clientX
+        const y = event.touches[0].clientY
+        const elements = document.elementsFromPoint(x, y)
+        const touchCell = elements.filter(element => element.classList.contains('cell'));
+        if (touchCell.length > 0) {
+            dragEnter(event, touchCell[0]);
+        } else {
+            dragLeave(event);
+        };
+        // Add in a ghost ship
+        // Potential to implement this into computer version to clean up UI
+        const app = document.querySelector('#app');
+        const prevBox = document.querySelector('.ghost-ship');
+        if (prevBox) prevBox.remove();
+        const newBox = shipBox.cloneNode(true);
+        const touchLocation = event.targetTouches[0];
+        if (dragData.shipElement.dataset.alignment === 'vertical'){
+            newBox.classList.add('setup-ship-vertical')
+        }
+        newBox.classList.add('ghost-ship')
+        newBox.style.left = `${touchLocation.pageX - dragData.offsetX}px`;
+        newBox.style.top = `${touchLocation.pageY - dragData.offsetY}px`;
+        app.appendChild(newBox)
+    })
+    shipBox.addEventListener('touchend', function (event) {
+        const prevBox = document.querySelector('.ghost-ship');
+        if (prevBox) prevBox.remove();
+        dragEnd(event);
+        const x = event.changedTouches[0].clientX;
+        const y = event.changedTouches[0].clientY
+        const elements = document.elementsFromPoint(x, y)
+        const touchCell = elements.filter(element => element.classList.contains('cell'));
+        if (touchCell.length > 0) {
+            drop(event, touchCell[0]);
+        };
+    })
+
+    // As mobile browsers don't support double tap, we add a timer into the touchstart event listener
+    shipBox.addEventListener('touchstart', function (event) {
+        // Disable browser default zoom on double tap
+        event.preventDefault();
+        let date = new Date();
+        let time = date.getTime();
+        const timeBetweenTaps = 200;
+        if ((time - shipBox.lastClick) < timeBetweenTaps) {
+            rotateShip(event);
+            dragStart(event);
+        } else {
+            dragStart(event);
+        }
+        shipBox.lastClick = time;
+    });
+
     const shipName = document.createElement('p');
-    if (ship.name === 'patrol') {
-        shipName.textContent = 'Patrol Boat';
-    } else {
-        shipName.textContent = ship.name;
-    }
+    if (ship.name === 'patrol') shipName.textContent = 'patrol boat';
+    else shipName.textContent = ship.name;
     shipContainer.append(shipName, shipBox);
     return shipContainer;
 }
@@ -133,6 +184,22 @@ function dragEnd(event) {
 //Append each ship element to the placed ship's origin and applying appropriate stylings
 function randomizeFleet() {
     player.gameBoard.placeAllShipsRandomly();
+    player.gameBoard.placedShips.forEach(ship=> {
+        const type = ship.type;
+        const origin = ship.squares[0];
+        const alignment = ship.alignment;
+        const shipElement = document.querySelector(`#${type}`);
+        shipElement.dataset.alignment = alignment;
+        shipElement.classList.add('setup-ship-dropped');
+        if(alignment == 'vertical'){
+            shipElement.classList.add('setup-ship-vertical');
+        } else {
+            shipElement.classList.remove('setup-ship-vertical');
+        }
+        const [row,col] = origin;
+        const cell = board.querySelector(`[data-row='${row}'][data-col='${col}']`);
+        cell.appendChild(shipElement);
+    });
 }
 // When a user grabs a ship element, we track the user's cursor location for the dragEnter and drop events
 // When the ship is grabbed from the center, the cursor does not match up with the ship's origin cell
@@ -323,7 +390,7 @@ function drop(event, touchCell) {
 }
 const setup = {
     drawSetupBoard,
-    drawSetupShips
+    drawSetupShips,
 }
 
 export default setup;
