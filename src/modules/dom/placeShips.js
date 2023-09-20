@@ -130,9 +130,9 @@ function dragEnd(event) {
 }
 
 //place all ships randomly on the players gameboard
-//Append each ship element to the placed ship's origin
+//Append each ship element to the placed ship's origin and applying appropriate stylings
 function randomizeFleet() {
-
+    player.gameBoard.placeAllShipsRandomly();
 }
 // When a user grabs a ship element, we track the user's cursor location for the dragEnter and drop events
 // When the ship is grabbed from the center, the cursor does not match up with the ship's origin cell
