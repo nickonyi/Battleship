@@ -25,11 +25,22 @@ newGameBtn.addEventListener('click', newGame);
 const game = Game();
 newGame();
 
+function startGame(player1,player2){
+    game.newGame(player1,player2);
+    drawGame();
+}
 
 function newGame() {
-    const player1 = game.createPlayer('Player 1', 1);
-    const player2 = game.createPlayer(false, 2);
-    drawSetup(player1);
+    const newPlayer1 = game.createPlayer('Player 1', 1);
+    const newPlayer2 = game.createPlayer(false, 2);
+    newPlayer2.gameBoard.placeAllShipsRandomly();
+    drawSetup(newPlayer1);
+    const startGameBtn = document.querySelector('.setup-button-start');
+    startGameBtn.addEventListener('click',function(event){
+        if(newPlayer1.gameBoard.placedShips.length == 5){
+            startGame(newPlayer1,newPlayer2);
+        }
+    });
 }
 
 function clearContainer(container) {
@@ -37,7 +48,15 @@ function clearContainer(container) {
         container.removeChild(container.firstChild);
     }
 }
+function drawGame(){
+    clearContainer(gameContainer);
+    const player1BoardContainer = drawBoardContainer(game.player1);
+    const player2BoardContainer = drawBoardContainer(game.player2);
+    populateBoard(game.player1,player1BoardContainer.querySelector('.board'));
+    populateBoard(game.player2,player2BoardContainer.querySelector('.board'));
 
+    gameContainer.append(player1BoardContainer,player2BoardContainer);
+}
 function drawSetup(player) {
     clearContainer(gameContainer);
     const setupBoard = setup.drawSetupBoard(player, drawBoardContainer(player));
@@ -72,9 +91,25 @@ function drawBoard(player) {
             cell.dataset.col = col;
             board.appendChild(cell);
 
-            if (player && player.isAi) cell.addEventListener('click', listenForAttack, false);
+           // if (player && player.isAi) cell.addEventListener('click', listenForAttack, false);
         }
 
     }
     return board;
+}
+
+//Draw the ships on the player's onscreen board so they can see their fleet
+function populateBoard(player,board){
+for (let row = 0; row < 10; row++) {
+    for (let col = 0; col < 10; col++) {
+        const square = player.gameBoard.board[row][col];
+        const cell = board.querySelector(`[data-row='${row}'][data-col='${col}']`);
+        if(square !== null && typeof square === 'object'){
+            cell.classList.add('cell-ship');
+        } else {
+            cell.classList.remove('cell-ship');
+        }
+    }
+    
+}
 }

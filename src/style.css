@@ -246,3 +246,7 @@ button:active {
 .cell-drag-invalid {
     background-color: var(--hit-color);
 }
+
+.cell-ship {
+    background-color: var(--ship-color);
+}
