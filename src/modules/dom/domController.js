@@ -53,8 +53,7 @@ function drawGame(){
     const player1BoardContainer = drawBoardContainer(game.player1);
     const player2BoardContainer = drawBoardContainer(game.player2);
     populateBoard(game.player1,player1BoardContainer.querySelector('.board'));
-    populateBoard(game.player2,player2BoardContainer.querySelector('.board'));
-
+    
     gameContainer.append(player1BoardContainer,player2BoardContainer);
 }
 function drawSetup(player) {
@@ -91,11 +90,24 @@ function drawBoard(player) {
             cell.dataset.col = col;
             board.appendChild(cell);
 
-           // if (player && player.isAi) cell.addEventListener('click', listenForAttack, false);
+            if (player && player.isAi) cell.addEventListener('click', listenForAttack, false);
         }
 
     }
     return board;
+}
+
+function listenForAttack(event){
+    const cell = event.target;
+    const defendigPlayerNumber = cell.dataset.player;
+    const attackingPlayerNumber = defendigPlayerNumber == "1"?"2":"1";
+    const attackingPlayer = game[`player${attackingPlayerNumber}`];
+    const defendigPlayer = game[`player${defendigPlayerNumber}`];
+    if(game.currentPlayer !== attackingPlayer) return;
+    const row = cell.dataset.row;
+    const col = cell.dataset.col;
+    console.log(attackingPlayer.battleboard.createAvailableAttacks());
+    const [result,location,ship] = attackingPlayer.attack(defendigPlayer,row,col);
 }
 
 //Draw the ships on the player's onscreen board so they can see their fleet
