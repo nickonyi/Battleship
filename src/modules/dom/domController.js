@@ -108,7 +108,7 @@ function listenForAttack(event) {
     if (game.currentPlayer !== attackingPlayer) return;
     const row = cell.dataset.row;
     const col = cell.dataset.col;
-    console.log(attackingPlayer.battlebot.availableAttacks);
+    attackingPlayer.battlebot.attack(defendigPlayer);
     console.log(attackingPlayer.gameBoard.placedShips);
     //const [result, location, ship] = attackingPlayer.attack(defendigPlayer, row, col);
 }
