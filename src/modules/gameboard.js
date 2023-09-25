@@ -117,10 +117,10 @@ function GameBoard() {
         clearBoard(this.board);
         clearFleet(placedShips);
         for (const ship in shipTypes) {
-            
+
             let result = this.placeShipRandomly(ship);
-            
-            while(typeof result !== 'object' || result == null){
+
+            while (typeof result !== 'object' || result == null) {
                 result = this.placeAllShipsRandomly(ship);
             }
         }
@@ -158,13 +158,27 @@ function GameBoard() {
         while (!shipSquares.isValid) {
             alignment = getRandomAlignment();
             origin = getRandomOrigin();
-            shipSquares = this.checkValidPlacement(shipLength,origin,alignment);
+            shipSquares = this.checkValidPlacement(shipLength, origin, alignment);
         }
         return this.placeShip(shipType, origin, alignment);
     }
 
 
-
+    function receiveAttack(row, col) {
+        if (this.checkSquare(row, col) === undefined) {
+            return 'Invalid location';
+        }
+        const attackedShip = this.board[row][col];
+        if (attackedShip === null) {
+            this.board[row][col] = 'miss';
+        } else {
+            attackedShip.hit();
+            this.board[row][col] = 'hit';
+        }
+        return [this.board[row][col],
+            [row, col], attackedShip
+        ];
+    }
 
 
     return {
@@ -175,7 +189,8 @@ function GameBoard() {
         placedShips,
         placeShip,
         placeAllShipsRandomly,
-        placeShipRandomly
+        placeShipRandomly,
+        receiveAttack
     }
 }
 
