@@ -109,7 +109,7 @@ function listenForAttack(event) {
     const row = cell.dataset.row;
     const col = cell.dataset.col;
     attackingPlayer.battlebot.attack(defendigPlayer);
-    console.log(attackingPlayer.gameBoard.placedShips);
+
     //const [result, location, ship] = attackingPlayer.attack(defendigPlayer, row, col);
 }
 

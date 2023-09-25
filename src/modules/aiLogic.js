@@ -32,6 +32,7 @@ function aiLogic() {
             }
         }
         let attackCoordinates = this.getRandomCell(enemy);
+        console.log(attackCoordinates);
         return attackCoordinates;
     }
 
@@ -44,6 +45,11 @@ function aiLogic() {
         //if the selected cell has no adjascent cell to attack get another random cell
         const adjascentCells = this.getAllAdjascentCells(enemy, cell);
         console.log(adjascentCells);
+        if (adjascentCells.every(cell => typeof cell.cellResult != 'object')) {
+            return this.getRandomCell(enemy);
+        }
+
+        return cell;
     }
 
     function getAdjascentCell(cell, direction) {
@@ -73,7 +79,7 @@ function aiLogic() {
         return possibleDirections.map(direction => {
             const adjascentCell = this.getAdjascentCell(cell, direction);
             const cellResult = enemy.gameBoard.checkSquare(adjascentCell[0], adjascentCell[1]);
-            console.log(cellResult);
+
             if (cellResult === 'hit') {
                 if (this.checkIfShipIsSunk(enemy, adjascentCell)) {
                     cellResult = 'sunk';
