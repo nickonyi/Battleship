@@ -19,7 +19,7 @@ function aiLogic() {
         //if the last hit ship has been sunk or nothing has been hit yet, get a random cell
         //If the bot has missed more than three times in a row, give it a 50% chance to cheat
         if (lastHitArray.length === 0) {
-            if (this.concurrentMisses > 3 && Math.random() > .8) {
+            if (this.concurrentMisses > 5 && Math.random() > .8) {
                 for (let row = 0; row < 10; row++) {
                     for (let col = 0; col < 10; col++) {
                         const cell = enemy.gameBoard.checkSquare(row, col);
@@ -32,15 +32,17 @@ function aiLogic() {
                 }
             }
             let attackCoordinates = this.getRandomCell(enemy);
-            console.log(attackCoordinates);
+            
             return attackCoordinates;
         }
         // Else, we find the next cell adjacent to the lastHit
         const lastHit = this.lastHitArray[lastHitArray.length - 1];
-        const adjacentCells = this.getAllAdjacentCells(enemy, lastHit);
+        const adjacentCells = this.getAllAdjascentCells(enemy, lastHit);
+        console.log(adjacentCells);
         const adjacentHits = adjacentCells.filter(cell => {
             return (cell.cellResult === 'hit' && this.checkIfShipIsSunk(enemy, cell.adjacentCell) === false);
         });
+        console.log(adjacentHits);
         // If there is a hit (or multiple) adjacent, attack in the opposite direction
         if (adjacentHits.length > 0) {
             const randomAdjacentHit = adjacentHits[Math.floor(Math.random() * adjacentHits.length)];
@@ -148,8 +150,64 @@ function aiLogic() {
             }
         });
     }
+     // Check if a cell is adjacent to, or in the same row/col as another
+    // Return the direction to the cell, the opposite direction, and the distance
+    function getAdjacency(cell, neighbourCell) {
+        let direction;
+        let oppositeDirection;
+        let distance;
+        if (cell[0] === neighbourCell[0]) {
+            const diff = cell[1] - neighbourCell[1];
+            direction = diff > 1 ? 'left' : 'right';
+            oppositeDirection = diff > 1 ? 'right' : 'left';
+            distance = Math.abs(diff);
+        } else if (cell[1] === neighbourCell[1]) {
+            const diff = cell[0] - neighbourCell[0];
+            direction = diff > 1 ? 'down' : 'up';
+            oppositeDirection = diff > 1 ? 'up' : 'down';
+            distance = Math.abs(diff);
+        } else {
+            return false;
+        }
+        return {
+            direction,
+            oppositeDirection,
+            distance
+        }
+    }
 
+      // Look for a possible cell to attack in a given direction (search 4 cells only)
+      function getNextAttackableCell(enemy, cell, direction) {
+        let nextCell = getAdjascentCell(cell, direction);
+        for (let i = 0; i < 4; i++) {
+            let nextCellStatus = enemy.gameboard.checkSquare(nextCell[0], nextCell[1]);
+            if (typeof nextCellStatus === 'object' || nextCellStatus === null) return nextCell;
+            if (nextCellStatus === undefined) return false;
+            if (nextCellStatus === 'miss') return false;
+            // We skip over a hit (could be part of the same ship we're attacking),
+            // unless that ship is sunk - then we shouldn't keep attacking in that direction
+            if (nextCellStatus === 'hit') {
+                if (this.checkIfShipIsSunk(enemy, nextCell)) return false;
+            }
+            nextCell = getAdjascentCell(nextCell, direction);
+        }
+        return false;
+    }
 
+    function flipDirection(direction) {
+        switch (direction) {
+            case 'up':
+                return 'down';
+            case 'down':
+                return 'up';
+            case 'left':
+                return 'right';
+            case 'right':
+                return 'left';
+            default:
+                return false;
+        }
+    }
     //find a ship at a certain cell and check if it sunk
     //if it is remove it's squares from the last hit array and retun true
     function checkIfShipIsSunk(enemy, cell) {
@@ -181,11 +239,14 @@ function aiLogic() {
 
     return {
         availableAttacks,
+        lastHitArray,
+        concurrentMisses,
         attack,
         getRandomCell,
         getAllAdjascentCells,
         getAdjascentCell,
-        removeCellFromAvailableAttacks
+        removeCellFromAvailableAttacks,
+        checkIfShipIsSunk
     }
 }
 

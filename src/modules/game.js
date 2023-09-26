@@ -4,7 +4,7 @@ function Game() {
     let player1;
     let player2;
     let currentPlayer;
-    let defendigPlayer;
+    let defendingPlayer;
 
     function createPlayer(playerName, playerNumber) {
         return Player(playerName, playerNumber);
@@ -14,7 +14,12 @@ function Game() {
            this.player1 = player1;
            this.player2 = player2;
            this.currentPlayer = this.player1;
-           this.defendigPlayer = this.player2;
+           this.defendingPlayer = this.player2;
+    }
+
+    function changeTurn(){
+        this.currentPlayer = this.currentPlayer === this.player1?this.player2:this.player1;
+        this.defendingPlayer = this.defendingPlayer === this.player2?this.player1:this.player2;
     }
 
 
@@ -22,9 +27,10 @@ function Game() {
         player1,
         player2,
         currentPlayer,
-        defendigPlayer,
+        defendingPlayer,
         createPlayer,
-        newGame
+        newGame,
+        changeTurn
         
         
     }

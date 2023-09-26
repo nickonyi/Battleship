@@ -112,6 +112,7 @@ function listenForAttack(event) {
     
     const [result, location, ship] = attackingPlayer.attack(defendingPlayer, row, col);
     styleAttackedCell(cell,defendingPlayerNumber,result,ship);
+    nextTurn();
 }
 
 //style the attacked cell based on a hit or a miss
@@ -130,6 +131,23 @@ function styleAttackedCell(cell,defendingPlayerNumber,result,ship){
         cell.classList.add('cell-miss');
     }
 
+}
+
+//call an attack for the AI
+function callAIAttack(ai) {
+   if(ai !== game.currentPlayer) return;
+   const defendingPlayerNumber = game.defendingPlayer === game.player1?"1":"2";
+   const [result,location,ship] = ai.attack(game.defendingPlayer);
+   const cell = document.querySelector(`[data-player='${defendingPlayerNumber}'][data-row='${location[0]}'][data-col='${location[1]}']`);
+   styleAttackedCell(cell,defendingPlayerNumber,result,ship);
+   nextTurn();
+}
+
+function nextTurn(){
+    game.changeTurn();
+    if(game.currentPlayer.isAi){
+        callAIAttack(game.currentPlayer);
+    }
 }
 
 //Draw the ships on the player's onscreen board so they can see their fleet
