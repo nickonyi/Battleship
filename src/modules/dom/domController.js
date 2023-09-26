@@ -101,17 +101,35 @@ function drawBoard(player) {
 
 function listenForAttack(event) {
     const cell = event.target;
-    const defendigPlayerNumber = cell.dataset.player;
-    const attackingPlayerNumber = defendigPlayerNumber == "1" ? "2" : "1";
+    const defendingPlayerNumber = cell.dataset.player;
+    const attackingPlayerNumber = defendingPlayerNumber == "1" ? "2" : "1";
     const attackingPlayer = game[`player${attackingPlayerNumber}`];
-    const defendingPlayer = game[`player${defendigPlayerNumber}`];
+    const defendingPlayer = game[`player${defendingPlayerNumber}`];
 
     if (game.currentPlayer !== attackingPlayer) return;
     const row = cell.dataset.row;
     const col = cell.dataset.col;
-    attackingPlayer.attack(defendingPlayer, row, col);
+    
+    const [result, location, ship] = attackingPlayer.attack(defendingPlayer, row, col);
+    styleAttackedCell(cell,defendingPlayerNumber,result,ship);
+}
 
-    //const [result, location, ship] = attackingPlayer.attack(defendigPlayer, row, col);
+//style the attacked cell based on a hit or a miss
+//if the whole ship is sunked,style each of the ship's cell with the .cell-sunk class
+function styleAttackedCell(cell,defendingPlayerNumber,result,ship){
+    if (result == 'hit') {
+        cell.classList.add('cell-hit');
+        if(ship.isSunk()){
+            ship.squares.forEach(square => {
+                const cell = document.querySelector(`[data-player='${defendingPlayerNumber}'][data-row='${square[0]}'][data-col='${square[1]}']`);
+                 cell.classList.add('cell-sunk');
+                });
+        }
+    }
+    if (result == 'miss') {
+        cell.classList.add('cell-miss');
+    }
+
 }
 
 //Draw the ships on the player's onscreen board so they can see their fleet

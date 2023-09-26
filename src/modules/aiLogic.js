@@ -1,6 +1,7 @@
 function aiLogic() {
     //create a 2D array of available attack coordinates
     const availableAttacks = createAttackArray();
+    let lastShip;
     //store an array containing all the recent attacks inorder
     //When a ship is sunk remove all its cell from the array
     //so we we have an array of recent hits of ships which have not yet been sunk
@@ -91,6 +92,22 @@ function aiLogic() {
         return cell;
     }
 
+    function removeCellFromAvailableAttacks(cell){
+        for (let row = 0; row < this.availableAttacks.length; row++) {
+            for (let col = 0; col < this.availableAttacks[row].length; col++) {
+                const square = this.availableAttacks[row][col];
+                if(cell[0] === square[0] && cell[1] === square[1]){
+                    this.availableAttacks[row].splice(col,1);
+                    if(this.availableAttacks[row].length === 0){
+                        this.availableAttacks.splice(row,1);
+                    } 
+                    return;
+                }
+            }
+            
+        }
+    }
+
     function getAdjascentCell(cell, direction) {
         let [row, col] = cell;
         switch (direction) {
@@ -167,7 +184,8 @@ function aiLogic() {
         attack,
         getRandomCell,
         getAllAdjascentCells,
-        getAdjascentCell
+        getAdjascentCell,
+        removeCellFromAvailableAttacks
     }
 }
 

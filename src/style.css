@@ -247,6 +247,38 @@ button:active {
     background-color: var(--hit-color);
 }
 
+@media (hover: hover) {
+    .cell:not([data-player='1']):not(.cell-hit):not(.cell-miss):hover {
+        background-color: var(--cell-hover-color);
+    }
+}
+
 .cell-ship {
     background-color: var(--ship-color);
+}
+
+.cell-hit {
+    background-color: var(--hit-color);
+}
+
+.cell-hit::after {
+    content: '✖';
+    opacity: 0.8;
+    font-size: 1.3rem;
+    padding-bottom: 1px;
+}
+
+.cell-miss {
+    background-color: var(--miss-color);
+}
+
+.cell-miss::after {
+    content: '●';
+    opacity: 0.6;
+    padding-bottom: 4px;
+}
+
+.cell-sunk {
+    background-color: var(--sunk-color);
+    transition: background-color 0.2s ease;
 }
