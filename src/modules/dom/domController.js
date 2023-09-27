@@ -99,6 +99,8 @@ function drawBoard(player) {
     return board;
 }
 
+
+
 function listenForAttack(event) {
     const cell = event.target;
     const defendingPlayerNumber = cell.dataset.player;
@@ -144,11 +146,47 @@ function callAIAttack(ai) {
 }
 
 function nextTurn(){
+    const winner = game.checkGameOver();
+    if(winner){
+        return endGame(winner);
+    }
+
     game.changeTurn();
    
     if(game.currentPlayer.isAi){
         callAIAttack(game.currentPlayer);
     }
+}
+
+function endGame(winner){
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => cell.removeEventListener('click',listenForAttack));
+    console.log(drawVictoryContainer(winner));
+    gameContainer.appendChild(drawVictoryContainer(winner));
+}
+
+//pop up victory container
+function drawVictoryContainer(winner){
+    const loser = game.checkGameOver() === game.player1?game.player2:game.player1;
+    const victoryContainer = document.createElement('div');
+    victoryContainer.classList.add('victory-container');
+    const victoryTitle = document.createElement('h2');
+    const winnerText = document.createElement('p');
+    const loserText = document.createElement('p');
+    if(winner.isAi){
+        victoryTitle.classList.add('victory-defeat');
+        victoryTitle.textContent = "TOTAL ANNILATION!";
+        winnerText.textContent = `${winner.name} has claimed domination`;
+        loserText.textContent = 'Your fleet is sunk!';
+    } else {
+        victoryTitle.classList.add('victory-victory');
+        victoryTitle.textContent = 'TOTAL VICTORY';
+        winnerText.textContent = `You have claimed domination!`;
+        loserText.textContent = `${loser.name}'s fleet is sunk.`
+    }
+    victoryContainer.append(victoryTitle,winnerText,loserText);
+
+    return victoryContainer;
 }
 
 //Draw the ships on the player's onscreen board so they can see their fleet

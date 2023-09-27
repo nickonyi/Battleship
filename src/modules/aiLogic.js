@@ -45,9 +45,8 @@ function aiLogic() {
         // If there is a hit (or multiple) adjacent, attack in the opposite direction
         if (adjacentHits.length > 0) {
             const randomAdjacentHit = adjacentHits[Math.floor(Math.random() * adjacentHits.length)];
-            console.log(randomAdjacentHit);
             let nextCell = this.getNextAttackableCell(enemy, lastHit, this.flipDirection(randomAdjacentHit.direction));
-            console.log(nextCell);
+           
             if (nextCell === false) {
                 nextCell = this.getNextAttackableCell(enemy, lastHit, randomAdjacentHit.direction);
             };

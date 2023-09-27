@@ -282,3 +282,35 @@ button:active {
     background-color: var(--sunk-color);
     transition: background-color 0.2s ease;
 }
+
+/* Victory container */
+.victory-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 318px;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    padding: 20px;
+    border: 3px solid var(--text-color-main);
+    background-color: var(--background-color-transparent);
+    backdrop-filter: blur(4px);
+}
+
+.victory-container h2 {
+    margin: 0;
+    text-shadow: 0 0 2px black, 0 0 4px black, 0 0 6px black;
+}
+
+.victory-container p {
+    margin: 6px;
+}
+
+.victory-victory {
+    color: var(--miss-color);
+}
+
+.victory-defeat {
+    color: var(--sunk-color);
+}

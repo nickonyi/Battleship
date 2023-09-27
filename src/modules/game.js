@@ -22,6 +22,13 @@ function Game() {
         this.defendingPlayer = this.defendingPlayer === this.player2?this.player1:this.player2;
     }
 
+    function checkGameOver(){
+        if(this.player1.gameBoard.checkAllShipsSunk()) return this.player2;
+        if(this.player2.gameBoard.checkAllShipsSunk()) return this.player1;
+
+        return false;
+    }
+
 
     return {
         player1,
@@ -30,7 +37,8 @@ function Game() {
         defendingPlayer,
         createPlayer,
         newGame,
-        changeTurn
+        changeTurn,
+        checkGameOver
         
         
     }

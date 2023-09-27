@@ -180,17 +180,21 @@ function GameBoard() {
         ];
     }
 
+    function checkAllShipsSunk(){
+         return placedShips.every(ship => ship.isSunk());
+    }
 
     return {
         board,
+        placedShips,
         removeShip,
         checkValidPlacement,
         checkSquare,
-        placedShips,
         placeShip,
         placeAllShipsRandomly,
         placeShipRandomly,
-        receiveAttack
+        receiveAttack,
+        checkAllShipsSunk
     }
 }
 
