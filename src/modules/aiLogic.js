@@ -10,7 +10,7 @@ function aiLogic() {
     let concurrentMisses = 0;
 
     function attack(enemy) {
-        if (lastHitArray.length > 0) {
+        if (this.lastHitArray.length > 0) {
             this.checkIfShipIsSunk(enemy, this.lastHitArray[lastHitArray.length - 1]);
         }
 
@@ -38,15 +38,16 @@ function aiLogic() {
         // Else, we find the next cell adjacent to the lastHit
         const lastHit = this.lastHitArray[lastHitArray.length - 1];
         const adjacentCells = this.getAllAdjascentCells(enemy, lastHit);
-        console.log(adjacentCells);
         const adjacentHits = adjacentCells.filter(cell => {
-            return (cell.cellResult === 'hit' && this.checkIfShipIsSunk(enemy, cell.adjacentCell) === false);
+            return (cell.cellResult === 'hit' && this.checkIfShipIsSunk(enemy, cell.adjascentCell) === false);
         });
-        console.log(adjacentHits);
+      
         // If there is a hit (or multiple) adjacent, attack in the opposite direction
         if (adjacentHits.length > 0) {
             const randomAdjacentHit = adjacentHits[Math.floor(Math.random() * adjacentHits.length)];
+            console.log(randomAdjacentHit);
             let nextCell = this.getNextAttackableCell(enemy, lastHit, this.flipDirection(randomAdjacentHit.direction));
+            console.log(nextCell);
             if (nextCell === false) {
                 nextCell = this.getNextAttackableCell(enemy, lastHit, randomAdjacentHit.direction);
             };
@@ -57,11 +58,13 @@ function aiLogic() {
         }
         // Iterate backwards through all other hit cells for adjaceny to the lastHit cell
         // If adjacency is found, see if we can attack a cell in that direction
+        
         for (let i = this.lastHitArray.length - 2; i >= 0; i--) {
             const cell = this.lastHitArray[i];
             const result = this.getAdjacency(lastHit, cell);
             if (result) {
                 let nextCell = this.getNextAttackableCell(enemy, lastHit, result.direction);
+                
                 if (nextCell) return nextCell;
             }
         }
@@ -70,9 +73,10 @@ function aiLogic() {
         const adjacentCellsToAttack = adjacentCells.filter(cell => {
             return typeof cell.cellResult !== 'string' && cell.cellResult !== undefined;
         });
+        
         const cell = adjacentCellsToAttack[Math.floor(Math.random() * adjacentCellsToAttack.length)];
-        console.log(cell.adjacentCell)
-        return cell.adjacentCell;
+
+        return cell.adjascentCell;
     }
 
 
@@ -136,7 +140,7 @@ function aiLogic() {
     function getAllAdjascentCells(enemy, cell) {
         return possibleDirections.map(direction => {
             const adjascentCell = this.getAdjascentCell(cell, direction);
-            const cellResult = enemy.gameBoard.checkSquare(adjascentCell[0], adjascentCell[1]);
+            let cellResult = enemy.gameBoard.checkSquare(adjascentCell[0], adjascentCell[1]);
 
             if (cellResult === 'hit') {
                 if (this.checkIfShipIsSunk(enemy, adjascentCell)) {
@@ -179,8 +183,9 @@ function aiLogic() {
       // Look for a possible cell to attack in a given direction (search 4 cells only)
       function getNextAttackableCell(enemy, cell, direction) {
         let nextCell = getAdjascentCell(cell, direction);
+
         for (let i = 0; i < 4; i++) {
-            let nextCellStatus = enemy.gameboard.checkSquare(nextCell[0], nextCell[1]);
+            let nextCellStatus = enemy.gameBoard.checkSquare(nextCell[0], nextCell[1]);
             if (typeof nextCellStatus === 'object' || nextCellStatus === null) return nextCell;
             if (nextCellStatus === undefined) return false;
             if (nextCellStatus === 'miss') return false;
@@ -246,7 +251,9 @@ function aiLogic() {
         getAllAdjascentCells,
         getAdjascentCell,
         removeCellFromAvailableAttacks,
-        checkIfShipIsSunk
+        checkIfShipIsSunk,
+        flipDirection,
+        getNextAttackableCell
     }
 }
 

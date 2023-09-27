@@ -145,6 +145,7 @@ function callAIAttack(ai) {
 
 function nextTurn(){
     game.changeTurn();
+   
     if(game.currentPlayer.isAi){
         callAIAttack(game.currentPlayer);
     }

@@ -13,9 +13,9 @@ function Player(playerName, playerNumber) {
         if (this.isAi) {
             if (this.battlebot.availableAttacks.length === 0) {
                 return 'No squares to attack';
-            } else {
-                [row, col] = this.battlebot.attack(enemy);
-            }
+            } 
+            [row, col] = this.battlebot.attack(enemy);
+            
         }
         //get the results of the attack and update ai logic with
         const results = enemy.gameBoard.receiveAttack(row, col);
@@ -28,8 +28,6 @@ function Player(playerName, playerNumber) {
         }
         if(results[0] === 'miss'){
             this.battlebot.concurrentMisses++; 
-            console.log(this.battlebot.concurrentMisses);
-            console.log(`Random:${Math.random()}`);
         }
         if(results[2] !== null){
             this.battlebot.lastShip = results[2];
