@@ -13,14 +13,39 @@ const footer = createFooterBox();
 
 const gameContainer = document.createElement('div');
 gameContainer.id = 'game-container';
+gameContainer.classList.add('game-container','active');
+const showPlayContainer = document.createElement('div');
+showPlayContainer.classList.add('how-to-play');
 
 
 app.appendChild(header)
 app.appendChild(gameContainer);
+app.appendChild(showPlayContainer);
 app.appendChild(footer);
 
-const newGameBtn = document.querySelector('.new-game-button');
-newGameBtn.addEventListener('click', newGame);
+function initializeGame (){
+    let homeActive = true;
+    let howToplayActive = false;
+
+    
+    const playBtn = document.querySelector('.play-button');
+        playBtn.addEventListener('click',()=>{
+            if(howToplayActive) return;
+            howToplayActive = true;
+            homeActive = false;
+            renderHowToPlay();
+        });
+
+        const newGameBtn = document.querySelector('.new-game-button');
+        newGameBtn.addEventListener('click', ()=>{
+        if (homeActive) return;
+        homeActive = true;
+        howToplayActive = false;
+        renderHome();
+    });
+}
+
+ initializeGame();
 
 const game = Game();
 newGame();
@@ -31,10 +56,12 @@ function startGame(player1, player2) {
 }
 
 function newGame() {
+    showGameContainer();
     const newPlayer1 = game.createPlayer('Nick_da_destroyer', 1);
     const newPlayer2 = game.createPlayer(false, 2);
     newPlayer2.gameBoard.placeAllShipsRandomly();
     drawSetup(newPlayer1);
+
     const startGameBtn = document.querySelector('.setup-button-start');
     startGameBtn.addEventListener('click', function(event) {
         if (newPlayer1.gameBoard.placedShips.length == 5) {
@@ -43,10 +70,32 @@ function newGame() {
     });
 }
 
+// creates a delay to be used in an async function
+function delay(delayInMs) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(2);
+      }, delayInMs);
+    });
+  }
+
+function showPlayer(){
+        clearContainer(showPlayContainer);
+        renderHowToPlay();
+        showPlayContainerBoard();
+        drawPlayBoard();
+}
+
 function clearContainer(container) {
     while (container.firstChild) {
         container.removeChild(container.firstChild);
     }
+}
+
+function drawPlayBoard(){
+   const playerTExt = document.createElement('h1');
+   playerTExt.textContent = "Carlifonia Girls";
+   showPlayContainer.appendChild(playerTExt);
 }
 
 function drawGame() {
@@ -204,3 +253,53 @@ function populateBoard(player, board) {
 
     }
 }
+function showGameContainer(){
+    gameContainer.style.display = 'flex';
+    showPlayContainer.style.display = 'none';
+}
+
+function showPlayContainerBoard(){
+    gameContainer.style.display = 'none';
+    showPlayContainer.style.display = 'flex';
+}
+
+function toggleActive(){
+        //gameContainer.classList.toggle('active');
+        showPlayContainer.classList.toggle('active');
+}
+
+//render home screen 
+async function renderHome() {
+    const home = document.querySelector("#game-container");
+    const howToPlay = document.querySelector(".how-to-play");
+    howToPlay.classList.toggle("active");
+    await delay(140);
+  
+    howToPlay.style.display = "none";
+    home.style.display = "flex";
+    await delay(140);
+  
+    home.classList.toggle("active");
+  
+    window.location.href = "#New-game";
+  }
+
+//renders how to play screen
+async function renderHowToPlay(){
+    const home = document.querySelector('#game-container');
+    const howToPlay = document.querySelector('.how-to-play');
+    home.classList.toggle('active');
+    await delay(140);
+    home.style.display = 'none';
+    howToPlay.style.display = 'flex';
+    await delay(140);
+    howToPlay.classList.toggle("active");
+  
+    window.location.href = "#how-to-play";
+}
+
+
+
+
+
+
