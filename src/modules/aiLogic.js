@@ -25,14 +25,12 @@ function aiLogic() {
                         const cell = enemy.gameBoard.checkSquare(row, col);
                         if (typeof cell === "object" && cell != null) {
                             console.log('cheating');
-                            console.log([row, col]);
                             return [row, col];
                         }
                     }
                 }
             }
             let attackCoordinates = this.getRandomCell(enemy);
-            
             return attackCoordinates;
         }
         // Else, we find the next cell adjacent to the lastHit
@@ -41,12 +39,12 @@ function aiLogic() {
         const adjacentHits = adjacentCells.filter(cell => {
             return (cell.cellResult === 'hit' && this.checkIfShipIsSunk(enemy, cell.adjascentCell) === false);
         });
-      
+
         // If there is a hit (or multiple) adjacent, attack in the opposite direction
         if (adjacentHits.length > 0) {
             const randomAdjacentHit = adjacentHits[Math.floor(Math.random() * adjacentHits.length)];
             let nextCell = this.getNextAttackableCell(enemy, lastHit, this.flipDirection(randomAdjacentHit.direction));
-           
+
             if (nextCell === false) {
                 nextCell = this.getNextAttackableCell(enemy, lastHit, randomAdjacentHit.direction);
             };
@@ -57,13 +55,13 @@ function aiLogic() {
         }
         // Iterate backwards through all other hit cells for adjaceny to the lastHit cell
         // If adjacency is found, see if we can attack a cell in that direction
-        
+
         for (let i = this.lastHitArray.length - 2; i >= 0; i--) {
             const cell = this.lastHitArray[i];
             const result = this.getAdjacency(lastHit, cell);
             if (result) {
                 let nextCell = this.getNextAttackableCell(enemy, lastHit, result.direction);
-                
+
                 if (nextCell) return nextCell;
             }
         }
@@ -72,7 +70,7 @@ function aiLogic() {
         const adjacentCellsToAttack = adjacentCells.filter(cell => {
             return typeof cell.cellResult !== 'string' && cell.cellResult !== undefined;
         });
-        
+
         const cell = adjacentCellsToAttack[Math.floor(Math.random() * adjacentCellsToAttack.length)];
 
         return cell.adjascentCell;
@@ -97,19 +95,19 @@ function aiLogic() {
         return cell;
     }
 
-    function removeCellFromAvailableAttacks(cell){
+    function removeCellFromAvailableAttacks(cell) {
         for (let row = 0; row < this.availableAttacks.length; row++) {
             for (let col = 0; col < this.availableAttacks[row].length; col++) {
                 const square = this.availableAttacks[row][col];
-                if(cell[0] === square[0] && cell[1] === square[1]){
-                    this.availableAttacks[row].splice(col,1);
-                    if(this.availableAttacks[row].length === 0){
-                        this.availableAttacks.splice(row,1);
-                    } 
+                if (cell[0] === square[0] && cell[1] === square[1]) {
+                    this.availableAttacks[row].splice(col, 1);
+                    if (this.availableAttacks[row].length === 0) {
+                        this.availableAttacks.splice(row, 1);
+                    }
                     return;
                 }
             }
-            
+
         }
     }
 
@@ -153,7 +151,7 @@ function aiLogic() {
             }
         });
     }
-     // Check if a cell is adjacent to, or in the same row/col as another
+    // Check if a cell is adjacent to, or in the same row/col as another
     // Return the direction to the cell, the opposite direction, and the distance
     function getAdjacency(cell, neighbourCell) {
         let direction;
@@ -179,8 +177,8 @@ function aiLogic() {
         }
     }
 
-      // Look for a possible cell to attack in a given direction (search 4 cells only)
-      function getNextAttackableCell(enemy, cell, direction) {
+    // Look for a possible cell to attack in a given direction (search 4 cells only)
+    function getNextAttackableCell(enemy, cell, direction) {
         let nextCell = getAdjascentCell(cell, direction);
 
         for (let i = 0; i < 4; i++) {

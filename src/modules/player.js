@@ -18,6 +18,7 @@ function Player(playerName, playerNumber) {
             
         }
         //get the results of the attack and update ai logic with
+        console.log(this.battlebot.attack(enemy));
         const results = enemy.gameBoard.receiveAttack(row, col);
         
         if(this.isAi){
