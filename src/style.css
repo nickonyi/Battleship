@@ -331,19 +331,19 @@ button:active {
 .how-to-play {
     display: none;
   transform: translateY(100vh);
-    height:70vh;
     width:100%;
+    height: 75vh;
     border:1px solid rgb(226, 128, 17);
     transition: 300ms ease-in-out;
     opacity: 0;
     flex-direction: column;
     width: 100vw;
-    margin: 0;
-    background-color: #ffffff;
+    margin-block: 50px;
+    background-color: skyblue;
     align-items: center;
     z-index: 9;
     padding-bottom: 5rem;
-    border:1px solid red;
+    
 }
 
 .how-to-play.active {
@@ -351,6 +351,31 @@ button:active {
     opacity: 100%;
   }
 
-  .how-to-play h1 {
-    color: red;
+  .how-to-playboard-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border:1px solid maroon;
+    padding-block: 20px;
+    padding-inline: 50px;
+    width: 60%;
   }
+.how-to-play-div-container{
+    display: flex;
+    gap:20px;
+}
+  .how-to-play-div-container > div {
+      padding:20px;
+      margin-top:15px;
+      background-color: var(--background-color);
+      flex:1;
+     
+  }
+  .how-to-playboard-header {
+    border: 2px dotted red;
+    margin: auto;
+  }
+ .how-to-play-div1-text {
+    margin-top: 10px;
+    font-weight: 300;
+ }

@@ -61,6 +61,7 @@ function newGame() {
     const newPlayer2 = game.createPlayer(false, 2);
     newPlayer2.gameBoard.placeAllShipsRandomly();
     drawSetup(newPlayer1);
+    drawPlayBoard();
 
     const startGameBtn = document.querySelector('.setup-button-start');
     startGameBtn.addEventListener('click', function(event) {
@@ -79,12 +80,6 @@ function delay(delayInMs) {
     });
   }
 
-function showPlayer(){
-        clearContainer(showPlayContainer);
-        renderHowToPlay();
-        showPlayContainerBoard();
-        drawPlayBoard();
-}
 
 function clearContainer(container) {
     while (container.firstChild) {
@@ -93,9 +88,53 @@ function clearContainer(container) {
 }
 
 function drawPlayBoard(){
-   const playerTExt = document.createElement('h1');
-   playerTExt.textContent = "Carlifonia Girls";
-   showPlayContainer.appendChild(playerTExt);
+   const howToPlayContainer = document.createElement('div');
+   howToPlayContainer.classList.add('how-to-playboard-container');
+   
+   const howToPlayHeader = document.createElement('h1');
+   howToPlayHeader.classList.add('how-to-playboard-header');
+   howToPlayHeader.textContent = "How to play battleship";
+
+   const howToPlayDivContainer = document.createElement('div');
+   howToPlayDivContainer.classList.add('how-to-play-div-container');
+
+   const howToPlayDiv1 = document.createElement('div');
+   howToPlayDiv1.classList.add('how-to-play-div-one');
+   const howToPlayDiv1Header = document.createElement('h3');
+   howToPlayDiv1Header.classList.add('how-to-play-div1-header');
+   howToPlayDiv1Header.textContent = "Rules";
+   const howToPlayDiv1Text1 = document.createElement('p');
+   howToPlayDiv1Text1.classList.add('how-to-play-div1-text');
+   howToPlayDiv1Text1.textContent = "The objective of Battleship is to try and sink all of the opponent's ships before they sink all of yours. Players take turns firing shots to attempt to hit the enemy ships";
+   const howToPlayDiv1Text2 = document.createElement('p');
+   howToPlayDiv1Text2.classList.add('how-to-play-div1-text');
+   howToPlayDiv1Text2.textContent = "Both players can not see the fleet of the other, you have to guess where is the ideal position to shoot at!";
+   const howToPlayDiv1Text3 = document.createElement('p');
+   howToPlayDiv1Text3.classList.add('how-to-play-div1-text');
+   howToPlayDiv1Text3.textContent = "When a player hits a tile that holds a ship, they can replay until they miss a shot.";
+   const howToPlayDiv1Text4 = document.createElement('p');
+   howToPlayDiv1Text4.classList.add('how-to-play-div1-text');
+   howToPlayDiv1Text4.textContent = "First player to sink all the opponent's ships wins the game!";
+
+   howToPlayDiv1.append(howToPlayDiv1Header,howToPlayDiv1Text1,howToPlayDiv1Text2,howToPlayDiv1Text3,howToPlayDiv1Text4);
+   
+   const howToPlayDiv2 = document.createElement('div');
+   howToPlayDiv2.classList.add('how-to-play-div-two');
+   const howToPlayDiv2Header = document.createElement('h3');
+   howToPlayDiv2Header.classList.add('how-to-play-div1-header');
+   howToPlayDiv2Header.textContent = "Controls";
+   const howToPlayDiv2Text1 = document.createElement('p');
+   howToPlayDiv2Text1.classList.add('how-to-play-div2-text');
+   howToPlayDiv2Text1.textContent = "Before starting, you need to place all your ships on the board. To do that, you can:";
+   const howToPlayDiv2Text2 = document.createElement('p');
+   howToPlayDiv2Text2.classList.add('how-to-play-div2-text');
+   howToPlayDiv2Text2.textContent = "Both players can not see the fleet of the other, you have to guess where is the ideal position to shoot at!";
+
+   howToPlayDiv2.append(howToPlayDiv2Header,howToPlayDiv2Text1,howToPlayDiv1Text2);
+
+   howToPlayDivContainer.append(howToPlayDiv1,howToPlayDiv2);
+   howToPlayContainer.append(howToPlayHeader,howToPlayDivContainer);
+   showPlayContainer.appendChild(howToPlayContainer);
 }
 
 function drawGame() {
