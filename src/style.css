@@ -3,6 +3,7 @@
     --board-size: 318px;
     --cell-size: 30px;
     --background-color: rgb(240, 240, 240);
+    --bg-color: rgb(216, 234, 241);
     --background-color-transparent: rgba(240, 240, 240, 0.7);
     --cell-color: rgb(230, 230, 230);
     --cell-hover-color: rgb(200, 200, 200);
@@ -21,6 +22,7 @@
 :root.dark {
     --background-color: rgb(30, 30, 30);
     --background-color-transparent: rgba(30, 30, 30, 0.7);
+    --bg-color: rgb(37, 53, 59);
     --cell-color: rgb(40, 40, 40);
     --cell-hover-color: rgb(90, 90, 90);
     --cell-border-color: rgb(220, 220, 220);
@@ -48,7 +50,7 @@ body {
 }
 
 #app {
-    background-color: skyblue;
+    background-color: var(--bg-color);
     padding: 0 5%;
     min-height: 100vh;
     display: flex;
@@ -110,9 +112,10 @@ button:active {
     margin-block: 50px;
     width: 676px;
     transform: translateY(-100vw);
-   opacity: 0;
-  transition: 300ms ease-in-out;
+    opacity: 0;
+    transition: 300ms ease-in-out;
 }
+
 #game-container.active {
     transform: none;
     opacity: 100%;
@@ -290,7 +293,9 @@ button:active {
     transition: background-color 0.2s ease;
 }
 
+
 /* Victory container */
+
 .victory-container {
     position: absolute;
     left: 50%;
@@ -326,56 +331,102 @@ button:active {
     display: block;
 }
 
-
-
 .how-to-play {
     display: none;
-  transform: translateY(100vh);
-    width:100%;
-    height: 75vh;
-    border:1px solid rgb(226, 128, 17);
+    transform: translateY(100vh);
+    width: 100%;
+    height: 65vh;
     transition: 300ms ease-in-out;
     opacity: 0;
     flex-direction: column;
     width: 100vw;
     margin-block: 50px;
-    background-color: skyblue;
+    background-color: var(--bg-color);
     align-items: center;
     z-index: 9;
     padding-bottom: 5rem;
-    
 }
 
 .how-to-play.active {
     transform: none;
     opacity: 100%;
-  }
+}
 
-  .how-to-playboard-container {
+.how-to-playboard-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border:1px solid maroon;
     padding-block: 20px;
     padding-inline: 50px;
     width: 60%;
-  }
-.how-to-play-div-container{
-    display: flex;
-    gap:20px;
 }
-  .how-to-play-div-container > div {
-      padding:20px;
-      margin-top:15px;
-      background-color: var(--background-color);
-      flex:1;
-     
-  }
-  .how-to-playboard-header {
-    border: 2px dotted red;
+
+.how-to-play-div-container {
+    display: flex;
+    gap: 20px;
+}
+
+.how-to-play-div-container>div {
+    padding: 20px;
+    margin-top: 30px;
+    background-color: var(--background-color);
+    flex: 1;
+    border-radius: 15px;
+    box-shadow: 0 10px 15px rgb(100, 100, 100);
+}
+
+.how-to-play-div2-header {
+    margin-bottom: 15px;
+}
+
+.how-to-playboard-header {
     margin: auto;
-  }
- .how-to-play-div1-text {
+}
+
+.how-to-play-div1-text {
     margin-top: 10px;
     font-weight: 300;
- }
+}
+
+
+/* Footer */
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 16px;
+    padding: 0 32px;
+}
+
+#footer-link {
+    text-decoration: none;
+}
+
+footer p {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+footer i {
+    color: var(--text-color-main);
+    transition: transform 0.1s ease;
+}
+
+@media (hover: hover) {
+    #footer-link:hover,
+    #footer-dark-mode:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+        transition: transform 0.1s ease;
+    }
+}
+
+@media screen and (max-width: 800px) {
+     :root {
+        --header-height: 80px;
+        --board-size: 278px;
+        --cell-size: 26px;
+    }
+}
