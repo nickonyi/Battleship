@@ -6,7 +6,7 @@ Part of The Odin Project's [curriculum](https://www.theodinproject.com/lessons/n
 
 Created by Phantommobb, 2023.
 
-**[Live page!](https:/)**
+**[Live page!](https://nickonyi.github.io/Battleship/)**
 
 ## Functionality
 
