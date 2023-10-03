@@ -4,7 +4,7 @@ A Battleship web game, created with HTML, CSS and JavaScript.
 
 Part of The Odin Project's [curriculum](https://www.theodinproject.com/lessons/node-path-javascript-battleship).
 
-Created by Carl Madsen, 2023.
+Created by Phantommobb, 2023.
 
 **[Live page!](https:/)**
 
